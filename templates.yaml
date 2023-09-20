@@ -1,14 +1,13 @@
 apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
   name: expressjs-template-tk20230920
-  title: Express.js Template by TK
-  description: Creates a an Expressjs app for the StageCentral Workshop manually
-
+  title: My New Template
+  description: Some template magic
 spec:
   owner: user:guest
   type: app
-  parameters:
                 
 steps:
 
