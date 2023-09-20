@@ -1,0 +1,66 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: expressjs-template-tk20230920
+  title: Express.js Template by TK
+  description: Creates a an Expressjs app for the StageCentral Workshop manually
+
+spec:
+  owner: user:guest
+  type: app
+  parameters:
+    - title: Fill in some steps
+      required:
+        - name
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+              
+steps:
+    - id: fetch-template
+      name: Fetch Template Repo
+      action: fetch:template
+      input:
+        url: ./express
+        #this defines that only .njk files will be templated
+        templateFileExtension: true
+        values:
+          name: ${{ parameters.name }}
+    - id: write-catalog-info
+      name: Write Catalog Info
+      action: catalog-write
+      input:
+        entity: 
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            name: ${{ parameters.name }}
+            namespace: default
+            description: The ${{ parameters.name }} service
+          spec:
+            type: app
+            lifecycle: production
+            owner: group:guests
+output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
